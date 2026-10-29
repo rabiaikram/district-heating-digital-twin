@@ -29,17 +29,20 @@ html(
 header, footer, #MainMenu { display: none; }
 [data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stDecoration"] { display: none; }
 .block-container, [data-testid="stMainBlockContainer"] {
-    padding: 1.5rem 2rem; max-width: 100%;
+    padding: 0 2rem 1.5rem 2rem !important; max-width: 100% !important;
 }
 [data-testid="stVerticalBlock"] { gap: 1rem; }
 
 /* ---------- Top bar ---------- */
 .st-key-topbar {
+    position: relative;
     background: #111622;
-    border-bottom: 1px solid #1e2638;
-    margin: -1.5rem -2rem 0 -2rem;
-    padding: 0.85rem 2rem;
-    width: calc(100% + 4rem);
+    padding: 0.85rem 0;
+    box-shadow: 0 0 0 100vmax #111622;
+    clip-path: inset(0 -100vmax);
+}
+.st-key-topbar::after {
+    content: ''; position: absolute; left: -100vmax; right: -100vmax; bottom: 0; height: 1px; background: #1e2638;
 }
 .brand { display: flex; align-items: center; gap: 14px; }
 .brand-icon {
@@ -90,8 +93,8 @@ header, footer, #MainMenu { display: none; }
     display: flex; align-items: center; justify-content: center; color: #94a3b8; flex: 0 0 40px;
 }
 .slider-left { display: flex; align-items: center; gap: 12px; }
-.slider-title { color: #e2e8f0; font-size: 13px; font-weight: 600; line-height: 1.2; }
-.slider-sub { color: #64748b; font-size: 11px; }
+.slider-title { color: #e2e8f0; font-size: 13px; font-weight: 600; line-height: 1.2; white-space: nowrap; }
+.slider-sub { color: #64748b; font-size: 11px; white-space: nowrap; }
 .days-text { color: #e2e8f0; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px; }
 .res-text { color: #64748b; font-size: 12px; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
 [data-testid="stSliderTickBarMin"], [data-testid="stSliderTickBarMax"],
@@ -144,6 +147,9 @@ header, footer, #MainMenu { display: none; }
 [data-testid="stExpander"] details { border: none; }
 [data-testid="stExpander"] details summary { padding: 20px 24px; color: #e2e8f0; font-weight: 600; font-size: 15px; }
 [data-testid="stExpander"] details summary:hover { color: #00f2fe; }
+[data-testid="stExpander"] details summary::after {
+    content: 'EXPAND DATA  ⌄'; margin-left: auto; color: #94a3b8; font-size: 11px; font-weight: 600; letter-spacing: 1.6px;
+}
 [data-testid="stExpander"] details[open] summary { border-bottom: 1px solid #1e2638; }
 
 /* ---------- Custom table ---------- */
@@ -266,7 +272,7 @@ with h_right:
 # 3. SLIDER ROW  st.columns([1, 6, 1, 2])
 # ----------------------------------------------------------------------------
 with st.container(key="sliderrow"):
-    s1, s2, s3, s4 = st.columns([1, 6, 1, 2], vertical_alignment="center")
+    s1, s2, s3, s4 = st.columns([2, 5, 1, 2], vertical_alignment="center")
     with s1:
         html(
             f"""
@@ -330,7 +336,7 @@ def style_fig(fig: go.Figure, y_range, y_ticks, y_suffix: str = "") -> go.Figure
     )
     fig.update_xaxes(showgrid=False, zeroline=False, showline=False, tickformat="%d %b", nticks=13, tickfont=dict(color="#64748b"))
     fig.update_yaxes(
-        showgrid=False, zeroline=False, showline=False,
+        showgrid=True, gridcolor="rgba(226,232,240,0.55)", gridwidth=1, zeroline=False, showline=False,
         range=y_range, tickvals=y_ticks, ticksuffix=y_suffix, automargin=True, tickfont=dict(color="#64748b"),
     )
     return fig
